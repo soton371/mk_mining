@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/colors.dart';
-import 'package:mk_mining/views/auth/sign_in_scr.dart';
+import 'package:mk_mining/views/home/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.seed),
         useMaterial3: true,
       ),
-      home: const SignInScreen(),
+      home: const HomeScreen(),
+      // home: const SignInScreen(),
     );
   }
 }
