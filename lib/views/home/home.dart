@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/views/home/components/balance.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,22 +21,21 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 35,
         ),
         actions: [
-          
           PopupMenuButton(
-            position: PopupMenuPosition.under,
+              position: PopupMenuPosition.under,
               child: const CircleAvatar(
                 child: Icon(CupertinoIcons.person),
               ),
               itemBuilder: (_) => [
                     const PopupMenuItem(
-                      enabled: false,
+                        enabled: false,
                         child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Soton Ahmed"),
-                        Text("tasmia437@gmail.com"),
-                      ],
-                    )),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Soton Ahmed"),
+                            Text("tasmia437@gmail.com"),
+                          ],
+                        )),
                     const PopupMenuItem(
                         child: Row(
                       children: [
@@ -46,8 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ))
                   ]),
-                  const SizedBox(width: 8,),
+          const SizedBox(
+            width: 8,
+          ),
         ],
+      ),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
+        child: Column(
+          children: [
+            Balance(),
+          ],
+        ),
       ),
     );
   }
