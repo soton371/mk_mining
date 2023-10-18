@@ -18,17 +18,18 @@ class ForgotPasswordScreen extends StatelessWidget {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.bodyPadding),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.bodyPadding),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 Image.asset(
                   "assets/images/email.png",
                   width: AppSizes.width(context) * 0.25,
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 Column(
                   children: [
                     Text(
@@ -43,6 +44,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     )
                   ],
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 TextField(
                   decoration: InputDecoration(
                       hintText: "email",
@@ -53,6 +55,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         CupertinoIcons.mail,
                       )),
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 SizedBox(
                   width: AppSizes.width(context),
                   child: CupertinoButton.filled(
@@ -62,7 +65,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       },
                       child: const Text("Verify")),
                 ),
-                const SizedBox(),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 const Column(
                   children: [
                     Text(

@@ -19,142 +19,144 @@ class SignUpScreen extends StatelessWidget {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover)),
-        child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.bodyPadding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Create a new account.",
-                        style: TextStyle(
-                            fontSize: AppSizes.width(context) * 0.07,
-                            fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.bodyPadding),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSizes.height(context) * 0.08,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Create a new account.",
+                      style: TextStyle(
+                          fontSize: AppSizes.width(context) * 0.07,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const Text("After creating an account you will get 500 coins",style: TextStyle(color: AppColors.hint),)
+                  ],
+                ),
+                SizedBox(height: AppSizes.height(context) * 0.05,),
+          
+                //for input & title
+                Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Name",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.person)),
+                    ),
+                    const SizedBox(
+                      height: AppSizes.bodyPadding,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Email",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.mail),),
+                    ),
+                    const SizedBox(
+                      height: AppSizes.bodyPadding,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Phone",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.phone),
+                          
+                          ),
+                    ),
+                    const SizedBox(
+                      height: AppSizes.bodyPadding,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Password",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.lock),
+                          suffixIcon: const Icon(CupertinoIcons.eye_slash)
+                          ),
+                    ),
+                    const SizedBox(
+                      height: AppSizes.bodyPadding,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Confirm password",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.lock),
+                          suffixIcon: const Icon(CupertinoIcons.eye_slash)
+                          ),
+                    ),
+                    const SizedBox(
+                      height: AppSizes.bodyPadding,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Refer code",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.tag),
+                          ),
+                    ),
+                  ],
+                ),
+                //for input & title
+                SizedBox(height: AppSizes.height(context) * 0.08,),
+          
+                //for button
+                SizedBox(
+                  width: AppSizes.width(context),
+                  child: CupertinoButton.filled(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (_) => const OTPScreen()));
+                      },
+                      child: const Text("Create a account")),
+                ),
+                //for button
+          
+                SizedBox(
+                  width: AppSizes.width(context),
+                  child: CupertinoButton(
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Already have a account?",
+                            style: TextStyle(color: AppColors.black),
+                          ),
+                          Text(" Sign In"),
+                        ],
                       ),
-                      const Text("After creating an account you will get 500 coins",style: TextStyle(color: AppColors.hint),)
-                    ],
-                  ),
-
-                  //for input & title
-                  Column(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Name",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.person)),
-                      ),
-                      const SizedBox(
-                        height: AppSizes.bodyPadding,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Email",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.mail),),
-                      ),
-                      const SizedBox(
-                        height: AppSizes.bodyPadding,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Phone",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.phone),
-                            
-                            ),
-                      ),
-                      const SizedBox(
-                        height: AppSizes.bodyPadding,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Password",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: const Icon(CupertinoIcons.eye_slash)
-                            ),
-                      ),
-                      const SizedBox(
-                        height: AppSizes.bodyPadding,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Confirm password",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: const Icon(CupertinoIcons.eye_slash)
-                            ),
-                      ),
-                      const SizedBox(
-                        height: AppSizes.bodyPadding,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Refer code",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.tag),
-                            ),
-                      ),
-                    ],
-                  ),
-                  //for input & title
-
-                  //for button
-                  SizedBox(
-                    width: AppSizes.width(context),
-                    child: CupertinoButton.filled(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => const OTPScreen()));
-                        },
-                        child: const Text("Create a account")),
-                  ),
-                  //for button
-
-                  SizedBox(
-                    width: AppSizes.width(context),
-                    child: CupertinoButton(
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Already have a account?",
-                              style: TextStyle(color: AppColors.black),
-                            ),
-                            Text(" Sign In"),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => const SignInScreen()));
-                        }),
-                  )
-                ],
-              ),
-            )),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (_) => const SignInScreen()));
+                      }),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

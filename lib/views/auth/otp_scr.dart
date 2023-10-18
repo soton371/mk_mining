@@ -17,17 +17,18 @@ class OTPScreen extends StatelessWidget {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.bodyPadding),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.bodyPadding),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 Image.asset(
                   "assets/images/password.png",
                   width: AppSizes.width(context) * 0.3,
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 Column(
                   children: [
                     Text(
@@ -40,6 +41,7 @@ class OTPScreen extends StatelessWidget {
                     )
                   ],
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -105,6 +107,7 @@ class OTPScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(height: AppSizes.height(context) * 0.1,),
                 CupertinoButton(
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -117,9 +120,7 @@ class OTPScreen extends StatelessWidget {
                       ],
                     ),
                     onPressed: () {}),
-                    const SizedBox(),
-                    const SizedBox(),
-                    const SizedBox(),
+                    
               ],
             ),
           ),

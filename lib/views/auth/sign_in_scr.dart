@@ -6,6 +6,7 @@ import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/auth/forgot_password_scr.dart';
 import 'package:mk_mining/views/auth/sign_up_scr.dart';
+import 'package:mk_mining/views/home/home.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -13,24 +14,26 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: double.maxFinite,
-        width: double.maxFinite,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover)),
-        child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.bodyPadding),
+      body: SafeArea(
+        child: Container(
+          height: double.maxFinite,
+          width: double.maxFinite,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover)),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.bodyPadding),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: AppSizes.height(context) * 0.1,),
                   Image.asset(
                     "assets/images/logo.png",
-                    height: AppSizes.height(context) * 0.03,
+                    height: 30,
                   ),
+                  SizedBox(height: AppSizes.height(context) * 0.1,),
                   //for input & title
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,15 +81,21 @@ class SignInScreen extends StatelessWidget {
                     ],
                   ),
                   //for input & title
-
+                  SizedBox(height: AppSizes.height(context) * 0.1,),
+            
                   //for button
                   Column(
                     children: [
                       SizedBox(
                         width: AppSizes.width(context),
                         child: CupertinoButton.filled(
-                            onPressed: () {},
-                            child: const Text("Login your account")),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (_) => const HomeScreen()));
+                            },
+                            child: const Text("Login my account")),
                       ),
                       const SizedBox(
                         height: AppSizes.bodyPadding,
@@ -109,7 +118,7 @@ class SignInScreen extends StatelessWidget {
                     ],
                   ),
                   //for button
-
+            
                   SizedBox(
                     width: AppSizes.width(context),
                     child: CupertinoButton(
@@ -132,7 +141,9 @@ class SignInScreen extends StatelessWidget {
                   )
                 ],
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
