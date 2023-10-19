@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/home/components/balance.dart';
+import 'package:mk_mining/views/home/components/refer_code.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,7 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
         child: Column(
           children: [
+            SizedBox(height: AppSizes.bodyPadding,),
             Balance(),
+            SizedBox(height: AppSizes.bodyPadding * 2,),
+            ReferCode(),
           ],
         ),
       ),
