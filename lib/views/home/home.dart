@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/home/components/balance.dart';
-import 'package:mk_mining/views/home/components/refer_code.dart';
+import 'package:mk_mining/views/refer/refer_code.dart';
+import 'package:mk_mining/views/refer/refer_list.dart';
+import 'package:mk_mining/views/refer/refer_list_scr.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,15 +56,77 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: AppSizes.bodyPadding,),
-            Balance(),
-            SizedBox(height: AppSizes.bodyPadding * 2,),
-            ReferCode(),
-          ],
+            
+            const Padding(
+              padding: EdgeInsets.all(AppSizes.bodyPadding),
+              child: Balance(),
+            ),
+            
+            const Padding(
+              padding: EdgeInsets.all(AppSizes.bodyPadding),
+              child: ReferCode(),
+            ),
+            const SizedBox(height: AppSizes.bodyPadding,),
+            //for refers list
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
+              child: Row(
+                children: [
+                  Container(
+                    height: 15,
+                    width: 3,
+                    decoration: const BoxDecoration(
+                        color: AppColors.black,
+                        borderRadius: BorderRadius.horizontal(
+                            right: Radius.circular(AppSizes.radius))),
+                  ),
+                  const Text(
+                    " Refers",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          CupertinoPageRoute(builder: (_) => const ReferListScreen()));
+                    },
+                    child: const Row(
+                      children: [
+                        Text(
+                          'All',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                            letterSpacing: 0.5,
+                            color: AppColors.nearlySeed,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 38,
+                          width: 26,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            
+            const ReferList(),
+          ]
+          ,
         ),
       ),
     );
