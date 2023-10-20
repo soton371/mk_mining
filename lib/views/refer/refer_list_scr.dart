@@ -8,7 +8,7 @@ class ReferListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Refer List"),
+        title: const Text("Team"),
         centerTitle: false,
       ),
       body: const ReferList());

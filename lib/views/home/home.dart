@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             right: Radius.circular(AppSizes.radius))),
                   ),
                   const Text(
-                    " Refers",
+                    " Team",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
