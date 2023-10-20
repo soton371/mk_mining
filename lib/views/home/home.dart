@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
+        automaticallyImplyLeading: false,
         title: Image.asset(
           "assets/images/logo.png",
           height: 35,
