@@ -57,7 +57,7 @@ class NewPasswordScreen extends StatelessWidget {
                     CupertinoIcons.lock,
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: AppSizes.bodyPadding,
             ),
             TextField(

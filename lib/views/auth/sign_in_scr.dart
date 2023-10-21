@@ -56,14 +56,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: AppSizes.height(context) * 0.1,
+                    height: AppSizes.height(context) * 0.09,
                   ),
                   Image.asset(
                     "assets/images/logo.png",
                     height: 30,
                   ),
                   SizedBox(
-                    height: AppSizes.height(context) * 0.1,
+                    height: AppSizes.height(context) * 0.09,
                   ),
                   //for input & title
                   Column(
@@ -117,7 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   //for input & title
                   SizedBox(
-                    height: AppSizes.height(context) * 0.1,
+                    height: AppSizes.height(context) * 0.09,
                   ),
 
                   //for button
@@ -154,6 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   //for button
+                  const SizedBox(height: AppSizes.bodyPadding,),
 
                   SizedBox(
                     width: AppSizes.width(context),
