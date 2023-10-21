@@ -2,12 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
-import 'package:mk_mining/views/auth/new_password_scr.dart';
+import 'package:otp_text_field/otp_text_field.dart';
+import 'package:otp_text_field/style.dart';
 
-class OTPScreen extends StatelessWidget {
+class OTPScreen extends StatefulWidget {
   const OTPScreen({super.key, required this.email});
   final String email;
 
+  @override
+  State<OTPScreen> createState() => _OTPScreenState();
+}
+
+class _OTPScreenState extends State<OTPScreen> {
+  final OtpFieldController otpCon = OtpFieldController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +43,8 @@ class OTPScreen extends StatelessWidget {
                   "Enter Verification Code",
                   style: TextStyle(fontSize: AppSizes.width(context) * 0.07),
                 ),
-                 Text(
-                  "We are automatically detecting a mail sent to your email address *****${email.substring(5)}",
+                Text(
+                  "We are automatically detecting a mail sent to your email address *****${widget.email.substring(5)}",
                   textAlign: TextAlign.center,
                 )
               ],
@@ -45,84 +52,27 @@ class OTPScreen extends StatelessWidget {
             SizedBox(
               height: AppSizes.height(context) * 0.1,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: AppColors.seed,
-                      borderRadius: BorderRadius.circular(AppSizes.radius)),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "8",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        fontSize: 35),
-                  ),
-                ),
-                Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: AppColors.seed.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(AppSizes.radius)),
-                    alignment: Alignment.center,
-                    child: const TextField(
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                    )),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: AppColors.seed.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(AppSizes.radius)),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        fontSize: 35),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: AppColors.seed.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(AppSizes.radius)),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        fontSize: 35),
-                  ),
-                ),
-              ],
+
+            //for otp code
+            OTPTextField(
+              controller: otpCon,
+              length: 4,
+              width: double.maxFinite,
+              fieldWidth: 50,
+              style: const TextStyle(fontSize: 17),
+              textFieldAlignment: MainAxisAlignment.spaceAround,
+              fieldStyle: FieldStyle.box,
+              otpFieldStyle: OtpFieldStyle(focusBorderColor: AppColors.seed),
+              onCompleted: (pin) {
+                debugPrint("Completed: $pin");
+              },
             ),
+            //end for otp code
+
             SizedBox(
               height: AppSizes.height(context) * 0.1,
             ),
-            CupertinoButton.filled(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (_) => const NewPasswordScreen()));
-                },
-                child: const Text("Continue")),
-            SizedBox(
-              height: AppSizes.height(context) * 0.1,
-            ),
+
             CupertinoButton(
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +84,10 @@ class OTPScreen extends StatelessWidget {
                     Text(" Resend OTP"),
                   ],
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  otpCon.clear();
+                  
+                }),
           ],
         ),
       ),
