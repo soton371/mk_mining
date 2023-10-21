@@ -1,13 +1,18 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/auth/otp_scr.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController emailCon = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,12 +28,16 @@ class ForgotPasswordScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(height: AppSizes.height(context) * 0.1,),
+                SizedBox(
+                  height: AppSizes.height(context) * 0.1,
+                ),
                 Image.asset(
                   "assets/images/email.png",
                   width: AppSizes.width(context) * 0.25,
                 ),
-                SizedBox(height: AppSizes.height(context) * 0.1,),
+                SizedBox(
+                  height: AppSizes.height(context) * 0.1,
+                ),
                 Column(
                   children: [
                     Text(
@@ -43,7 +52,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: AppSizes.height(context) * 0.1,),
+                SizedBox(
+                  height: AppSizes.height(context) * 0.1,
+                ),
                 TextField(
                   decoration: InputDecoration(
                       hintText: "email",
@@ -54,17 +65,23 @@ class ForgotPasswordScreen extends StatelessWidget {
                         CupertinoIcons.mail,
                       )),
                 ),
-                SizedBox(height: AppSizes.height(context) * 0.1,),
+                SizedBox(
+                  height: AppSizes.height(context) * 0.1,
+                ),
                 SizedBox(
                   width: AppSizes.width(context),
                   child: CupertinoButton.filled(
                       onPressed: () {
-                        Navigator.push(context,
-                            CupertinoPageRoute(builder: (_) => const OTPScreen()));
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (_) => OTPScreen(email: emailCon.text,)));
                       },
                       child: const Text("Verify")),
                 ),
-                SizedBox(height: AppSizes.height(context) * 0.1,),
+                SizedBox(
+                  height: AppSizes.height(context) * 0.1,
+                ),
                 const Column(
                   children: [
                     Text(

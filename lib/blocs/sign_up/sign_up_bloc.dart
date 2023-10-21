@@ -1,13 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:mk_mining/services/check_mail_ser.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(SignUpInitial()) {
-    on<DoSignUpEvent>((event, emit) {
+    on<DoSignUpEvent>((event, emit) async {
       debugPrint("call DoSignUpEvent");
       // debugPrint("name: ${event.name}, email: ${event.email}, phone: ${event.phone}, password: ${event.password}, cPassword: ${event.cPassword}, refer code: ${event.referCode}");
       emit(SignUpLoading());
@@ -33,8 +34,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
 
-      if (event.phone.trim().isNotEmpty && event.phone.trim().length != 11) {
-        emit(const SignUpException(msg: "Please enter 11-digit number"));
+      if (event.phone.trim().isNotEmpty && event.phone.trim().length <= 9) {
+        emit(
+            const SignUpException(msg: "Number must be greater than 9-digits"));
         return;
       }
 
@@ -50,12 +52,22 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       }
 
       if (event.password.trim().length <= 5) {
-        emit(const SignUpException(msg: "Password must be more than 5 characters"));
+        emit(const SignUpException(
+            msg: "Password must be more than 5 characters"));
         return;
       }
 
       if (event.password != event.cPassword) {
         emit(const SignUpException(msg: "No two passwords are the same"));
+        return;
+      }
+
+      final Map<String, String> checkMailPayload = {
+        "email": event.email.trim()
+      };
+      final checkMail = await checkMailService(payload: checkMailPayload);
+      if (checkMail.status == 0) {
+        emit( SignUpException(msg: checkMail.message ?? "Email already used"));
         return;
       }
 

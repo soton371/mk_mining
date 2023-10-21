@@ -5,7 +5,8 @@ import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/auth/new_password_scr.dart';
 
 class OTPScreen extends StatelessWidget {
-  const OTPScreen({super.key});
+  const OTPScreen({super.key, required this.email});
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +34,10 @@ class OTPScreen extends StatelessWidget {
               children: [
                 Text(
                   "Enter Verification Code",
-                  style:
-                      TextStyle(fontSize: AppSizes.width(context) * 0.07),
+                  style: TextStyle(fontSize: AppSizes.width(context) * 0.07),
                 ),
-                const Text(
-                  "We are automatically detecting a mail sent to your email address ****s01@gmail.com",
+                 Text(
+                  "We are automatically detecting a mail sent to your email address *****${email.substring(5)}",
                   textAlign: TextAlign.center,
                 )
               ],
@@ -68,8 +68,7 @@ class OTPScreen extends StatelessWidget {
                     width: 50,
                     decoration: BoxDecoration(
                         color: AppColors.seed.withOpacity(0.5),
-                        borderRadius:
-                            BorderRadius.circular(AppSizes.radius)),
+                        borderRadius: BorderRadius.circular(AppSizes.radius)),
                     alignment: Alignment.center,
                     child: const TextField(
                       keyboardType: TextInputType.number,

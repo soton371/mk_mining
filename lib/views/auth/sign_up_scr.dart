@@ -31,8 +31,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (state is SignUpLoading) {
             appLoader(context);
           } else if (state is SignUpSuccess) {
+            Navigator.pop(context);
             Navigator.push(
-                context, CupertinoPageRoute(builder: (_) => const OTPScreen()));
+                context, CupertinoPageRoute(builder: (_) => OTPScreen(email: emailCon.text,)));
           } else if (state is SignUpException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
