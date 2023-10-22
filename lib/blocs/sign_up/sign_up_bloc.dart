@@ -2,11 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/services/check_mail_ser.dart';
+import 'package:mk_mining/services/otp_send_ser.dart';
+import 'package:mk_mining/services/sign_up_ser.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
+  String? name, email, phone, password, cPassword, referCode, optCode;
   SignUpBloc() : super(SignUpInitial()) {
     on<DoSignUpEvent>((event, emit) async {
       debugPrint("call DoSignUpEvent");
@@ -62,15 +65,65 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
 
+      //for check email
       final Map<String, String> checkMailPayload = {
         "email": event.email.trim()
       };
       final checkMail = await checkMailService(payload: checkMailPayload);
       if (checkMail.status == 0) {
-        emit( SignUpException(msg: checkMail.message ?? "Email already used"));
+        emit(SignUpException(msg: checkMail.message ?? "Email already used"));
+        return;
+      }
+      //end for check email
+
+      name = event.name;
+      email = event.email;
+      phone = event.phone;
+      password = event.password;
+      cPassword = event.cPassword;
+      referCode = event.referCode;
+
+      emit(SignUpSuccess());
+    });
+
+    //for otp send
+    on<SendOtpEvent>((event, emit) async {
+      debugPrint("call SendOtpEvent");
+      final otp = await otpSendService(payload: {"email": email ?? ''});
+      if (otp.status == 0) {
+        emit(SignUpException(msg: otp.message ?? "Failed to send otp"));
+        return;
+      }
+      final otpData = otp.data;
+      if (otpData == null) {
+        emit(const SignUpException(msg: "Otp code not available"));
+        return;
+      }
+      optCode = otpData.code.toString();
+    });
+
+    //for otp submit
+    on<SubmitOtpEvent>((event, emit) async {
+      debugPrint("call SubmitOtpEvent");
+      if (optCode != event.otpCode.trim().toString()) {
+        emit(const SignUpException(msg: "Otp not matching"));
         return;
       }
 
+      final Map<String, String> signUpPayload = {
+        "name": name.toString(),
+        "email": email.toString(),
+        "phone": phone.toString(),
+        "password": password.toString(),
+        "is_active": '1',
+        "by_refer_code": referCode.toString()
+      };
+      final signUpData = await signUpService(payload: signUpPayload);
+      if (signUpData.status == 0) {
+        emit(
+            SignUpException(msg: signUpData.message ?? "Something went wrong"));
+        return;
+      }
       emit(SignUpSuccess());
     });
   }

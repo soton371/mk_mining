@@ -19,3 +19,4 @@ final class SignUpException extends SignUpState {
   @override
   List<Object> get props => [msg];
 }
+

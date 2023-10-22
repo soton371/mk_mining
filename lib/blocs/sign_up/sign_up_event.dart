@@ -16,6 +16,19 @@ class DoSignUpEvent extends SignUpEvent {
       required this.password,
       required this.cPassword,
       required this.referCode});
-      @override
-  List<Object> get props => [name, email, phone, password, cPassword, referCode];
+  @override
+  List<Object> get props =>
+      [name, email, phone, password, cPassword, referCode];
+}
+
+class SendOtpEvent extends SignUpEvent {
+  
+}
+
+
+class SubmitOtpEvent extends SignUpEvent {
+  final String otpCode;
+  const SubmitOtpEvent({required this.otpCode});
+  @override
+  List<Object> get props => [otpCode];
 }

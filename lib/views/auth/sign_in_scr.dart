@@ -33,7 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
           } else if (state is SignInException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.message, actions: [
-              CupertinoButton(
+              CupertinoDialogAction(
                   child: const Text("OK"),
                   onPressed: () {
                     Navigator.pop(context);

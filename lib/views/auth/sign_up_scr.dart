@@ -37,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           } else if (state is SignUpException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
-              CupertinoButton(
+              CupertinoDialogAction(
                   child: const Text("OK"),
                   onPressed: () {
                     Navigator.pop(context);

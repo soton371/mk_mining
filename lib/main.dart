@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mk_mining/blocs/sign_in/sign_in_bloc.dart';
 import 'package:mk_mining/blocs/sign_up/sign_up_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
-import 'package:mk_mining/views/auth/otp_scr.dart';
 import 'package:mk_mining/views/auth/sign_in_scr.dart';
+
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -43,9 +42,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.seed),
           useMaterial3: true,
         ),
-        home: const OTPScreen(email: "tasmia437@gmail.com",),
-        // home: const SignInScreen(),
+        // home: const OTPScreen(email: "tasmia437@gmail.com",),
+        home: const SignInScreen(),
       ),
     );
   }
 }
+
