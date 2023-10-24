@@ -105,6 +105,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     //for otp submit
     on<SubmitOtpEvent>((event, emit) async {
       debugPrint("call SubmitOtpEvent");
+      emit(SignUpLoading());
       if (optCode != event.otpCode.trim().toString()) {
         emit(const SignUpException(msg: "Otp not matching"));
         return;

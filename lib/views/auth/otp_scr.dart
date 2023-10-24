@@ -6,6 +6,7 @@ import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/auth/sign_in_scr.dart';
 import 'package:mk_mining/widgets/app_alert_dialog.dart';
+import 'package:mk_mining/widgets/app_loader.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 
@@ -20,18 +21,39 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final OtpFieldController otpCon = OtpFieldController();
   @override
+  void initState() {
+    context.read<SignUpBloc>().add(SendOtpEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) {
-          if (state is SignUpSuccess) {
+          if (state is SignUpLoading) {
+            appLoader(context);
+          }else if (state is SignUpSuccess) {
             debugPrint("otp match");
-            appAlertDialog(context, "Welcome", "Your account is created successfully", actions: [
-              CupertinoDialogAction(child: const Text('Go to login'),onPressed:()=> Navigator.pushReplacement(context, CupertinoPageRoute(builder: (_)=>const SignInScreen())),)
-            ]);
+            Navigator.pop(context);
+            appAlertDialog(
+                context, "Welcome", "Your account is created successfully",
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('Go to login'),
+                    onPressed: () => Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (_) => const SignInScreen())),
+                  )
+                ]);
           } else if (state is SignUpException) {
+            Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
-              CupertinoDialogAction(child: const Text('OK'),onPressed:()=> Navigator.pop(context),)
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context),
+              )
             ]);
           }
         },
