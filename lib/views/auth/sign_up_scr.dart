@@ -17,12 +17,16 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  
   final TextEditingController nameCon = TextEditingController(text: '');
   final TextEditingController emailCon = TextEditingController(text: '');
   final TextEditingController phoneCon = TextEditingController(text: '');
   final TextEditingController passwordCon = TextEditingController(text: '');
   final TextEditingController cPasswordCon = TextEditingController(text: '');
   final TextEditingController referCon = TextEditingController(text: '');
+  bool hPassword = true;
+  bool hCPassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +37,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           } else if (state is SignUpSuccess) {
             Navigator.pop(context);
             Navigator.push(
-                context, CupertinoPageRoute(builder: (_) => OTPScreen(email: emailCon.text,)));
+                context,
+                CupertinoPageRoute(
+                    builder: (_) => OTPScreen(
+                          email: emailCon.text,
+                        )));
           } else if (state is SignUpException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
@@ -126,26 +134,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       TextField(
                         controller: passwordCon,
+                        obscureText: hPassword,
                         decoration: InputDecoration(
                             hintText: "Password*",
                             filled: true,
                             isDense: true,
                             fillColor: AppColors.systemGrey3.withOpacity(0.3),
                             prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: const Icon(CupertinoIcons.eye_slash)),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                  setState(() {
+                                    hPassword = !hPassword;
+                                  });
+                                },
+                              child: Icon(hPassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash),),),
                       ),
                       const SizedBox(
                         height: AppSizes.bodyPadding,
                       ),
                       TextField(
                         controller: cPasswordCon,
+                        obscureText: hCPassword,
                         decoration: InputDecoration(
                             hintText: "Confirm password*",
                             filled: true,
                             isDense: true,
                             fillColor: AppColors.systemGrey3.withOpacity(0.3),
                             prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: const Icon(CupertinoIcons.eye_slash)),
+                            suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    hCPassword = !hCPassword;
+                                  });
+                                },
+                                child: Icon(hCPassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash),),),
                       ),
                       const SizedBox(
                         height: AppSizes.bodyPadding,
@@ -183,7 +205,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: const Text("Create a account")),
                   ),
                   //for button
-                  const SizedBox(height: AppSizes.bodyPadding,),
+                  const SizedBox(
+                    height: AppSizes.bodyPadding,
+                  ),
 
                   SizedBox(
                     width: AppSizes.width(context),

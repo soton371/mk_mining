@@ -20,6 +20,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwordCon = TextEditingController();
+
+  bool passwordOb = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         height: AppSizes.bodyPadding,
                       ),
                       TextField(
-                        obscureText: true,
+                        obscureText: passwordOb,
                         controller: passwordCon,
                         decoration: InputDecoration(
                             hintText: "password",
@@ -98,7 +100,13 @@ class _SignInScreenState extends State<SignInScreen> {
                             isDense: true,
                             fillColor: AppColors.systemGrey3.withOpacity(0.3),
                             prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: const Icon(CupertinoIcons.eye_slash)),
+                            suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    passwordOb = !passwordOb;
+                                  });
+                                },
+                                child: Icon(passwordOb ? CupertinoIcons.eye : CupertinoIcons.eye_slash),),),
                       ),
                       Align(
                           alignment: Alignment.centerRight,
@@ -154,7 +162,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   //for button
-                  const SizedBox(height: AppSizes.bodyPadding,),
+                  const SizedBox(
+                    height: AppSizes.bodyPadding,
+                  ),
 
                   SizedBox(
                     width: AppSizes.width(context),
