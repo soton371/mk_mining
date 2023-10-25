@@ -22,9 +22,12 @@ class DoSignUpEvent extends SignUpEvent {
 }
 
 class SendOtpEvent extends SignUpEvent {
-  
+  final String email;
+  final bool fromForgotPassword;
+  const SendOtpEvent({required this.email, this.fromForgotPassword = false});
+  @override
+  List<Object> get props => [email,fromForgotPassword];
 }
-
 
 class SubmitOtpEvent extends SignUpEvent {
   final String otpCode;

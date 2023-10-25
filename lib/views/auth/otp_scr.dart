@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mk_mining/blocs/sign_up/sign_up_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/views/auth/new_password_scr.dart';
 import 'package:mk_mining/views/auth/sign_in_scr.dart';
 import 'package:mk_mining/widgets/app_alert_dialog.dart';
 import 'package:mk_mining/widgets/app_loader.dart';
@@ -11,8 +12,10 @@ import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key, required this.email});
+  const OTPScreen(
+      {super.key, required this.email, this.fromForgotPassword = false});
   final String email;
+  final bool fromForgotPassword;
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -22,7 +25,11 @@ class _OTPScreenState extends State<OTPScreen> {
   final OtpFieldController otpCon = OtpFieldController();
   @override
   void initState() {
-    context.read<SignUpBloc>().add(SendOtpEvent());
+    if (!widget.fromForgotPassword) {
+      context.read<SignUpBloc>().add(SendOtpEvent(email: widget.email));
+    }
+    
+
     super.initState();
   }
 
@@ -33,20 +40,26 @@ class _OTPScreenState extends State<OTPScreen> {
         listener: (context, state) {
           if (state is SignUpLoading) {
             appLoader(context);
-          }else if (state is SignUpSuccess) {
-            debugPrint("otp match");
+          } else if (state is SignUpSuccess) {
             Navigator.pop(context);
-            appAlertDialog(
-                context, "Welcome", "Your account is created successfully",
-                actions: [
-                  CupertinoDialogAction(
-                    child: const Text('Go to login'),
-                    onPressed: () => Navigator.pushReplacement(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (_) => const SignInScreen())),
-                  )
-                ]);
+            if (widget.fromForgotPassword) {
+              Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (_) => const NewPasswordScreen()));
+            } else {
+              appAlertDialog(
+                  context, "Welcome", "Your account is created successfully",
+                  actions: [
+                    CupertinoDialogAction(
+                      child: const Text('Go to login'),
+                      onPressed: () => Navigator.pushReplacement(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (_) => const SignInScreen())),
+                    )
+                  ]);
+            }
           } else if (state is SignUpException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
@@ -129,7 +142,9 @@ class _OTPScreenState extends State<OTPScreen> {
                   onPressed: () {
                     otpCon.clear();
                     //new event for resend
-                    context.read<SignUpBloc>().add(SendOtpEvent());
+                    context
+                        .read<SignUpBloc>()
+                        .add(SendOtpEvent(email: widget.email));
                   }),
             ],
           ),

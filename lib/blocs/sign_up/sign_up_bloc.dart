@@ -49,7 +49,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       }
 
       if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-          .hasMatch(event.email)) {
+          .hasMatch(event.email.trim())) {
         emit(const SignUpException(msg: "Please enter valid email"));
         return;
       }
@@ -89,7 +89,23 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     //for otp send
     on<SendOtpEvent>((event, emit) async {
       debugPrint("call SendOtpEvent");
-      final otp = await otpSendService(payload: {"email": email ?? ''});
+      if (event.fromForgotPassword) {
+        emit(SignUpLoading());
+        if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+            .hasMatch(event.email.trim())) {
+          emit(const SignUpException(msg: "Please enter valid email"));
+          return;
+        }
+        final Map<String, String> checkMailPayload = {
+          "email": event.email.trim()
+        };
+        final checkMail = await checkMailService(payload: checkMailPayload);
+        if (checkMail.status == 0) {
+          emit(SignUpException(msg: checkMail.message ?? "Email already used"));
+          return;
+        }
+      }
+      final otp = await otpSendService(payload: {"email": event.email});
       if (otp.status == 0) {
         emit(SignUpException(msg: otp.message ?? "Failed to send otp"));
         return;
@@ -100,6 +116,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
       optCode = otpData.code.toString();
+      if (event.fromForgotPassword) {
+        emit(SignUpSuccess());
+      }
     });
 
     //for otp submit
