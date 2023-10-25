@@ -41,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 CupertinoPageRoute(
                     builder: (_) => OTPScreen(
                           email: emailCon.text,
+                          fromForgotPassword: false,
                         )));
           } else if (state is SignUpException) {
             Navigator.pop(context);

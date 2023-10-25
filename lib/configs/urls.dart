@@ -6,4 +6,5 @@ class AppUrls {
   static const String getBalance = "$baseUrl/get_mining_balance";
   static const String sendMail = "$baseUrl/send_mail";
   static const String checkEmailExist = "$baseUrl/check_email_exist";
+  static const String forgotPassword = "$baseUrl/forgot_password";
 }

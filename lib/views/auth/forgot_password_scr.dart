@@ -29,7 +29,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Navigator.pushReplacement(
                 context,
                 CupertinoPageRoute(
-                    builder: (_) => OTPScreen(email: emailCon.text)));
+                    builder: (_) => OTPScreen(email: emailCon.text, fromForgotPassword: true,)));
           } else if (state is SignUpException) {
             Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [

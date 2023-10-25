@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/services/check_mail_ser.dart';
+import 'package:mk_mining/services/forgot_password_ser.dart';
 import 'package:mk_mining/services/otp_send_ser.dart';
 import 'package:mk_mining/services/sign_up_ser.dart';
 
@@ -96,14 +97,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           emit(const SignUpException(msg: "Please enter valid email"));
           return;
         }
-        final Map<String, String> checkMailPayload = {
-          "email": event.email.trim()
-        };
-        final checkMail = await checkMailService(payload: checkMailPayload);
-        if (checkMail.status == 0) {
-          emit(SignUpException(msg: checkMail.message ?? "Email already used"));
-          return;
-        }
       }
       final otp = await otpSendService(payload: {"email": event.email});
       if (otp.status == 0) {
@@ -142,6 +135,48 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       if (signUpData.status == 0) {
         emit(
             SignUpException(msg: signUpData.message ?? "Something went wrong"));
+        return;
+      }
+      emit(SignUpSuccess());
+    });
+
+    //for forgot password
+    on<ForgotPasswordEvent>((event, emit) async {
+      debugPrint("call ForgotPasswordEvent");
+      emit(SignUpLoading());
+      if (event.newPassword.trim().length <= 5) {
+        emit(const SignUpException(
+            msg: "Password must be more than 5 characters"));
+        return;
+      }
+
+      if (event.newPassword.trim() != event.confirmPassword.trim()) {
+        emit(const SignUpException(msg: "No two passwords are the same"));
+        return;
+      }
+
+      final Map<String, String> forgotPayload = {
+        "email": event.email.trim(),
+        "password": event.newPassword.trim(),
+      };
+
+      final forgotPassword =
+          await forgotPasswordService(payload: forgotPayload);
+
+      if (forgotPassword.status == 0) {
+        emit(SignUpException(
+            msg: forgotPassword.message ?? "Something went wrong"));
+        return;
+      }
+      emit(SignUpSuccess());
+    });
+
+    //match otp for forgot password MatchOTPForgotPasswordEvent
+    on<MatchOTPForgotPasswordEvent>((event, emit) async {
+      debugPrint("call MatchOTPForgotPasswordEvent");
+      emit(SignUpLoading());
+      if (optCode != event.otp.trim().toString()) {
+        emit(const SignUpException(msg: "Otp not matching"));
         return;
       }
       emit(SignUpSuccess());

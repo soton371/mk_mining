@@ -13,7 +13,7 @@ import 'package:otp_text_field/style.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen(
-      {super.key, required this.email, this.fromForgotPassword = false});
+      {super.key, required this.email, required this.fromForgotPassword});
   final String email;
   final bool fromForgotPassword;
 
@@ -25,10 +25,10 @@ class _OTPScreenState extends State<OTPScreen> {
   final OtpFieldController otpCon = OtpFieldController();
   @override
   void initState() {
+    debugPrint("widget.fromForgotPassword: ${widget.fromForgotPassword}");
     if (!widget.fromForgotPassword) {
-      context.read<SignUpBloc>().add(SendOtpEvent(email: widget.email));
+      context.read<SignUpBloc>().add(SendOtpEvent(email: widget.email , fromForgotPassword: widget.fromForgotPassword));
     }
-    
 
     super.initState();
   }
@@ -46,7 +46,9 @@ class _OTPScreenState extends State<OTPScreen> {
               Navigator.pushReplacement(
                   context,
                   CupertinoPageRoute(
-                      builder: (_) => const NewPasswordScreen()));
+                      builder: (_) => NewPasswordScreen(
+                            email: widget.email,
+                          )));
             } else {
               appAlertDialog(
                   context, "Welcome", "Your account is created successfully",
@@ -118,8 +120,15 @@ class _OTPScreenState extends State<OTPScreen> {
                 fieldStyle: FieldStyle.box,
                 otpFieldStyle: OtpFieldStyle(focusBorderColor: AppColors.seed),
                 onCompleted: (pin) {
-                  debugPrint("Completed: $pin");
-                  context.read<SignUpBloc>().add(SubmitOtpEvent(otpCode: pin));
+                  if (widget.fromForgotPassword) {
+                    context
+                        .read<SignUpBloc>()
+                        .add(MatchOTPForgotPasswordEvent(otp: pin));
+                  } else {
+                    context
+                        .read<SignUpBloc>()
+                        .add(SubmitOtpEvent(otpCode: pin));
+                  }
                 },
               ),
               //end for otp code
@@ -144,7 +153,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     //new event for resend
                     context
                         .read<SignUpBloc>()
-                        .add(SendOtpEvent(email: widget.email));
+                        .add(SendOtpEvent(email: widget.email, fromForgotPassword: widget.fromForgotPassword));
                   }),
             ],
           ),

@@ -8,7 +8,7 @@ import 'package:mk_mining/models/otp_send_mod.dart';
 
 Future<OtpSendModel> otpSendService(
     {required Map<String, String> payload}) async {
-  debugPrint("call checkMailService");
+  debugPrint("call otpSendService");
   final Uri url = Uri.parse(AppUrls.sendMail);
   final OtpSendModel otpSendModel = OtpSendModel();
   try {

@@ -24,9 +24,9 @@ class DoSignUpEvent extends SignUpEvent {
 class SendOtpEvent extends SignUpEvent {
   final String email;
   final bool fromForgotPassword;
-  const SendOtpEvent({required this.email, this.fromForgotPassword = false});
+  const SendOtpEvent({required this.email, required this.fromForgotPassword});
   @override
-  List<Object> get props => [email,fromForgotPassword];
+  List<Object> get props => [email, fromForgotPassword];
 }
 
 class SubmitOtpEvent extends SignUpEvent {
@@ -34,4 +34,22 @@ class SubmitOtpEvent extends SignUpEvent {
   const SubmitOtpEvent({required this.otpCode});
   @override
   List<Object> get props => [otpCode];
+}
+
+class ForgotPasswordEvent extends SignUpEvent {
+  final String email, newPassword, confirmPassword;
+  const ForgotPasswordEvent(
+      {required this.email,
+      required this.newPassword,
+      required this.confirmPassword});
+  @override
+  List<Object> get props =>
+      [email, newPassword, confirmPassword]; //now create bloc
+}
+
+class MatchOTPForgotPasswordEvent extends SignUpEvent {
+  final String otp;
+  const MatchOTPForgotPasswordEvent({required this.otp});
+  @override
+  List<Object> get props => [otp];
 }
