@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ReferCode extends StatelessWidget {
   const ReferCode({super.key, required this.referCode});
@@ -38,14 +39,13 @@ class ReferCode extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const Spacer(),
+                  
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.share),
-                  ),
-                  IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Share.share(referCode);
+                    },
                     icon: const Icon(
-                      Icons.copy,
+                      Icons.share,
                       color: AppColors.seed,
                     ),
                   ),
