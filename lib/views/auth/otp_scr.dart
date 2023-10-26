@@ -5,7 +5,7 @@ import 'package:mk_mining/blocs/sign_up/sign_up_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 import 'package:mk_mining/views/auth/new_password_scr.dart';
-import 'package:mk_mining/views/auth/sign_in_scr.dart';
+import 'package:mk_mining/views/home/home.dart';
 import 'package:mk_mining/widgets/app_alert_dialog.dart';
 import 'package:mk_mining/widgets/app_loader.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -27,7 +27,8 @@ class _OTPScreenState extends State<OTPScreen> {
   void initState() {
     debugPrint("widget.fromForgotPassword: ${widget.fromForgotPassword}");
     if (!widget.fromForgotPassword) {
-      context.read<SignUpBloc>().add(SendOtpEvent(email: widget.email , fromForgotPassword: widget.fromForgotPassword));
+      context.read<SignUpBloc>().add(SendOtpEvent(
+          email: widget.email, fromForgotPassword: widget.fromForgotPassword));
     }
 
     super.initState();
@@ -54,20 +55,22 @@ class _OTPScreenState extends State<OTPScreen> {
                   context, "Welcome", "Your account is created successfully",
                   actions: [
                     CupertinoDialogAction(
-                      child: const Text('Go to login'),
+                      child: const Text('Go to home'),
                       onPressed: () => Navigator.pushReplacement(
                           context,
                           CupertinoPageRoute(
-                              builder: (_) => const SignInScreen())),
+                              builder: (_) => const HomeScreen())),
                     )
                   ]);
             }
           } else if (state is SignUpException) {
-            Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
               CupertinoDialogAction(
                 child: const Text('OK'),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
               )
             ]);
           }
@@ -151,9 +154,9 @@ class _OTPScreenState extends State<OTPScreen> {
                   onPressed: () {
                     otpCon.clear();
                     //new event for resend
-                    context
-                        .read<SignUpBloc>()
-                        .add(SendOtpEvent(email: widget.email, fromForgotPassword: widget.fromForgotPassword));
+                    context.read<SignUpBloc>().add(SendOtpEvent(
+                        email: widget.email,
+                        fromForgotPassword: widget.fromForgotPassword));
                   }),
             ],
           ),

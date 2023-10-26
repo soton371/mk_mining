@@ -33,11 +33,11 @@ class _SignInScreenState extends State<SignInScreen> {
             Navigator.pushReplacement(context,
                 CupertinoPageRoute(builder: (_) => const HomeScreen()));
           } else if (state is SignInException) {
-            Navigator.pop(context);
             appAlertDialog(context, "Warning", state.message, actions: [
               CupertinoDialogAction(
                   child: const Text("OK"),
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   })
             ]);
@@ -95,18 +95,22 @@ class _SignInScreenState extends State<SignInScreen> {
                         obscureText: passwordOb,
                         controller: passwordCon,
                         decoration: InputDecoration(
-                            hintText: "password",
-                            filled: true,
-                            isDense: true,
-                            fillColor: AppColors.systemGrey3.withOpacity(0.3),
-                            prefixIcon: const Icon(CupertinoIcons.lock),
-                            suffixIcon: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    passwordOb = !passwordOb;
-                                  });
-                                },
-                                child: Icon(passwordOb ? CupertinoIcons.eye : CupertinoIcons.eye_slash),),),
+                          hintText: "password",
+                          filled: true,
+                          isDense: true,
+                          fillColor: AppColors.systemGrey3.withOpacity(0.3),
+                          prefixIcon: const Icon(CupertinoIcons.lock),
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                passwordOb = !passwordOb;
+                              });
+                            },
+                            child: Icon(passwordOb
+                                ? CupertinoIcons.eye
+                                : CupertinoIcons.eye_slash),
+                          ),
+                        ),
                       ),
                       Align(
                           alignment: Alignment.centerRight,
