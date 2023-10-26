@@ -4,7 +4,8 @@ import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
 
 class ReferCode extends StatelessWidget {
-  const ReferCode({super.key});
+  const ReferCode({super.key, required this.referCode});
+  final String referCode;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,7 @@ class ReferCode extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSizes.radius),
         boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: AppColors.hint.withOpacity(0.2),
-              blurRadius: 10.0),
+          BoxShadow(color: AppColors.hint.withOpacity(0.2), blurRadius: 10.0),
         ],
       ),
       child: Column(
@@ -34,9 +33,9 @@ class ReferCode extends StatelessWidget {
               radius: const Radius.circular(AppSizes.radius / 2),
               child: Row(
                 children: [
-                  const Text(
-                    "   RXGJ#GJBIQWERT",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                   Text(
+                    "   $referCode",
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const Spacer(),
                   IconButton(

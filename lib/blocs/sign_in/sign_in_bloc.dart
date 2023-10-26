@@ -8,6 +8,12 @@ part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
+  String uName = '',
+      uEmail = '',
+      referCode = '',
+      mainBalance = '',
+      miningBalance = '',
+      token = '';
   SignInBloc() : super(SignInInitial()) {
     on<DoSignInEvent>((event, emit) async {
       debugPrint("call DoSignInEvent");
@@ -26,8 +32,31 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         return;
       }
 
+      final data = result.data;
+      final balance = result.balance;
+      if (data == null || balance == null) {
+        emit(const SignInException(message: "Data is empty"));
+        return;
+      }
+      //for received balance
+      mainBalance = balance.mainBalance ?? '';
+      miningBalance = balance.miningBalance ?? '';
+
+      //for received token
+      token = data.token ?? '';
+
+      final user = data.user;
+      if (user == null) {
+        emit(const SignInException(message: "User is empty"));
+        return;
+      }
+
+      //for received user info
+      uName = user.name ?? '';
+      uEmail = user.email ?? '';
+      referCode = user.referCode ?? '';
+
       emit(SignInSuccess());
     });
   }
 }
-
