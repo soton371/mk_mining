@@ -10,4 +10,5 @@ class AppColors {
   static const Color grey = Color(0xFF3A5160);
   static const Color darkerText = Color(0xFF17262A);
   static const Color nearlySeed = Colors.orangeAccent;
+  static const Color red = Colors.red;
 }

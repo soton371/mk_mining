@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mk_mining/blocs/refer/refer_bloc.dart';
 import 'package:mk_mining/blocs/sign_in/sign_in_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
@@ -28,8 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
     referCode = context.read<SignInBloc>().referCode;
     mainBalance = context.read<SignInBloc>().mainBalance;
     miningBalance = context.read<SignInBloc>().miningBalance;
+    final token = context.read<SignInBloc>().token;
+    context.read<ReferBloc>().add(FetchReferUserEvent(token: token));
     setState(() {});
-    debugPrint("name: $name");
   }
 
   @override
@@ -55,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Icon(CupertinoIcons.person),
               ),
               itemBuilder: (_) => [
-                     PopupMenuItem(
+                    PopupMenuItem(
                         enabled: false,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,9 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-             Padding(
+            Padding(
               padding: const EdgeInsets.all(AppSizes.bodyPadding),
-              child: Balance(mainBalance: mainBalance,miningBalance: miningBalance,),
+              child: Balance(
+                mainBalance: mainBalance,
+                miningBalance: miningBalance,
+              ),
             ),
 
             const SizedBox(
@@ -94,69 +99,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Padding(
               padding: const EdgeInsets.all(AppSizes.bodyPadding),
-              child: ReferCode(referCode: referCode,),
-            ),
-            const SizedBox(
-              height: AppSizes.bodyPadding+8,
-            ),
-            //for refers list
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
-              child: Row(
-                children: [
-                  Container(
-                    height: 15,
-                    width: 3,
-                    decoration: const BoxDecoration(
-                        color: AppColors.black,
-                        borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(AppSizes.radius))),
-                  ),
-                  const Text(
-                    " Team",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (_) => const ReferListScreen()));
-                    },
-                    child: const Row(
-                      children: [
-                        Text(
-                          'All',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                            letterSpacing: 0.5,
-                            color: AppColors.nearlySeed,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 38,
-                          width: 26,
-                          child: Icon(
-                            Icons.arrow_forward,
-                            size: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+              child: ReferCode(
+                referCode: referCode,
               ),
             ),
+            const SizedBox(
+              height: AppSizes.bodyPadding + 8,
+            ),
 
-            const ReferList(),
+            //for refers list
+            BlocBuilder<ReferBloc, ReferState>(
+              builder: (context, state) {
+                if (state is ReferLoadingState) {
+                  return const CupertinoActivityIndicator();
+                } else if (state is ReferSuccessState) {
+                  return Column(
+                    children: [
+                      //title
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.bodyPadding),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 15,
+                              width: 3,
+                              decoration: const BoxDecoration(
+                                  color: AppColors.black,
+                                  borderRadius: BorderRadius.horizontal(
+                                      right: Radius.circular(AppSizes.radius))),
+                            ),
+                            const Text(
+                              " Team",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const Spacer(),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (_) => ReferListScreen(
+                                              referUserList: state.referUsers,
+                                            )));
+                              },
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    'All',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      letterSpacing: 0.5,
+                                      color: AppColors.nearlySeed,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 38,
+                                    width: 26,
+                                    child: Icon(
+                                      Icons.arrow_forward,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      //show list
+                      ReferList(
+                        referUserList: state.referUsers,
+                      ),
+                    ],
+                  );
+                } else if (state is ReferUserEmptyState) {
+                  return const Text("Refer user is empty");
+                } else if (state is ReferFailedState) {
+                  return Text(state.msg);
+                } else {
+                  return const Text('Else state');
+                }
+              },
+            ),
           ],
         ),
       ),

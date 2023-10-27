@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/models/refer_user_mod.dart';
 
 class ReferList extends StatelessWidget {
-  const ReferList({super.key});
+  const ReferList({super.key, required this.referUserList, this.count});
+  final List<ReferUser?> referUserList;
+  final int? count;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-        itemCount: 10,
-        itemBuilder: (_, i) => ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: count == null
+            ? referUserList.length
+            : referUserList.length < (count ?? 10)
+                ? referUserList.length
+                : count,
+        itemBuilder: (_, i) {
+          final data = referUserList[i];
+          if (data == null) {
+            return SizedBox();
+          } else {
+            return ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: AppSizes.bodyPadding),
               leading: Container(
                 height: 48,
                 width: 48,
@@ -28,21 +41,25 @@ class ReferList extends StatelessWidget {
                       bottomRight: Radius.circular(4.0),
                       topRight: Radius.circular(25.0)),
                 ),
-                child: const Text(
-                  "S",
-                  style: TextStyle(
+                child: Text(
+                  data.name == null
+                      ? "null"
+                      : data.name!.characters.first.toUpperCase(),
+                  style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white),
                 ),
               ),
-              title: const Text(
-                "Soton Ahmed",
-                style: TextStyle(
+              title: Text(
+                data.name ?? 'null',
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              subtitle: const Text("tasmia437@gmail.com"),
-            ));
+              subtitle: Text(data.email ?? 'null'),
+            );
+          }
+        });
   }
 }

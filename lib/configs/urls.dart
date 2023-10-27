@@ -7,4 +7,5 @@ class AppUrls {
   static const String sendMail = "$baseUrl/send_mail";
   static const String checkEmailExist = "$baseUrl/check_email_exist";
   static const String forgotPassword = "$baseUrl/forgot_password";
+  static const String referUser = "$baseUrl/refer_user";
 }
