@@ -111,7 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocBuilder<ReferBloc, ReferState>(
               builder: (context, state) {
                 if (state is ReferLoadingState) {
-                  return const CupertinoActivityIndicator();
+                  return Text("The team is being brought..",textAlign: TextAlign.center,
+            style: TextStyle(
+                color: AppColors.grey.withOpacity(0.6),
+                fontWeight: FontWeight.w500),);
                 } else if (state is ReferSuccessState) {
                   return Column(
                     children: [
@@ -177,13 +180,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       //show list
                       ReferList(
                         referUserList: state.referUsers,
+                        count: 1,
                       ),
                     ],
                   );
                 } else if (state is ReferUserEmptyState) {
-                  return const Text("Refer user is empty");
+                  return Text("Your team has not been joined yet",textAlign: TextAlign.center,
+            style: TextStyle(
+                color: AppColors.grey.withOpacity(0.6),
+                fontWeight: FontWeight.w500),);
                 } else if (state is ReferFailedState) {
-                  return Text(state.msg);
+                  return Text(state.msg,textAlign: TextAlign.center,
+            style: TextStyle(
+                color: AppColors.grey.withOpacity(0.6),
+                fontWeight: FontWeight.w500),);
                 } else {
                   return const Text('Else state');
                 }

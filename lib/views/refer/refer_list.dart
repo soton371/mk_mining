@@ -21,7 +21,7 @@ class ReferList extends StatelessWidget {
         itemBuilder: (_, i) {
           final data = referUserList[i];
           if (data == null) {
-            return SizedBox();
+            return const SizedBox();
           } else {
             return ListTile(
               contentPadding:
