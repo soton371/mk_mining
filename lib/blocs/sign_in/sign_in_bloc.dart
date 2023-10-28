@@ -51,6 +51,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         return;
       }
 
+      if (user.isActive == "0") {
+        emit(const SignInException(message: "This user has been disabled"));
+        return;
+      }
+
       //for received user info
       uName = user.name ?? '';
       uEmail = user.email ?? '';
