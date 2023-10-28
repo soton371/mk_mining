@@ -5,6 +5,7 @@ import 'package:mk_mining/blocs/refer/refer_bloc.dart';
 import 'package:mk_mining/blocs/sign_in/sign_in_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/views/auth/sign_in_scr.dart';
 import 'package:mk_mining/views/home/components/balance.dart';
 import 'package:mk_mining/views/refer/refer_code.dart';
 import 'package:mk_mining/views/refer/refer_list.dart';
@@ -66,16 +67,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(email),
                           ],
                         )),
-                    const PopupMenuItem(
-                        child: Row(
-                      children: [
-                        Icon(
-                          CupertinoIcons.power,
-                          size: 16,
-                        ),
-                        Text("  Log out"),
-                      ],
-                    ))
+                    PopupMenuItem(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (_) => const SignInScreen()));
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.power,
+                              size: 16,
+                            ),
+                            Text("  Log out"),
+                          ],
+                        ))
                   ]),
           const SizedBox(
             width: 8,
@@ -111,10 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocBuilder<ReferBloc, ReferState>(
               builder: (context, state) {
                 if (state is ReferLoadingState) {
-                  return Text("The team is being brought..",textAlign: TextAlign.center,
-            style: TextStyle(
-                color: AppColors.grey.withOpacity(0.6),
-                fontWeight: FontWeight.w500),);
+                  return Text(
+                    "The team is being brought..",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.grey.withOpacity(0.6),
+                        fontWeight: FontWeight.w500),
+                  );
                 } else if (state is ReferSuccessState) {
                   return Column(
                     children: [
@@ -180,20 +190,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       //show list
                       ReferList(
                         referUserList: state.referUsers,
-                        count: 1,
+                        count: 10,
                       ),
                     ],
                   );
                 } else if (state is ReferUserEmptyState) {
-                  return Text("Your team has not been joined yet",textAlign: TextAlign.center,
-            style: TextStyle(
-                color: AppColors.grey.withOpacity(0.6),
-                fontWeight: FontWeight.w500),);
+                  return Text(
+                    "Your team has not been joined yet",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.grey.withOpacity(0.6),
+                        fontWeight: FontWeight.w500),
+                  );
                 } else if (state is ReferFailedState) {
-                  return Text(state.msg,textAlign: TextAlign.center,
-            style: TextStyle(
-                color: AppColors.grey.withOpacity(0.6),
-                fontWeight: FontWeight.w500),);
+                  return Text(
+                    state.msg,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.grey.withOpacity(0.6),
+                        fontWeight: FontWeight.w500),
+                  );
                 } else {
                   return const Text('Else state');
                 }

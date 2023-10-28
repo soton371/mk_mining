@@ -20,15 +20,15 @@ class _BalanceState extends State<Balance> {
       CountdownController(autoStart: false);
 
   DateTime? startTime;
-  bool miningButtonStay = false;
+  bool miningButtonStay = true;
   bool mining = false;
-  double sec = 0.0;
+  int sec = 120;
 
-  void miningAction() {
-    startTime = DateTime.now(); //from local db start date time
-    DateTime currentTime = DateTime.now();
-    var df = startTime!.difference(currentTime);
-  }
+  // void miningAction() {
+  //   startTime = DateTime.now(); //from local db start date time
+  //   DateTime currentTime = DateTime.now();
+  //   var df = startTime!.difference(currentTime);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -279,17 +279,16 @@ class _BalanceState extends State<Balance> {
                               height: 100,
                               child: Countdown(
                                 controller: countdownController,
-                                seconds: 60,
+                                seconds: sec,
                                 build: (BuildContext context, double time) {
-                                  debugPrint("time: $time");
-                                  double normalizedValue = time / 120.0;
+                                  double normalizedValue = time / 120;
                                   return CircularProgressIndicator(
                                     value: normalizedValue,
                                     backgroundColor:
                                         AppColors.nearlySeed.withOpacity(0.3),
                                   );
                                 },
-                                interval: const Duration(seconds: 1),
+                                interval: const Duration(milliseconds: 10),
                                 onFinished: () {
                                   debugPrint('Timer is done!');
                                   mining = false;

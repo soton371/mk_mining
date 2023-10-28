@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mk_mining/blocs/sign_up/sign_up_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
-import 'package:mk_mining/views/home/home.dart';
+import 'package:mk_mining/views/auth/sign_in_scr.dart';
 import 'package:mk_mining/widgets/app_alert_dialog.dart';
 import 'package:mk_mining/widgets/app_loader.dart';
 
@@ -33,13 +33,14 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
               context, "Welcome", "Your new password is created successfully",
               actions: [
                 CupertinoDialogAction(
-                  child: const Text('Go to home'),
+                  child: const Text('Go to login'),
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                         context,
                         CupertinoPageRoute(
-                            builder: (_) => const HomeScreen()));
+                            builder: (_) => const SignInScreen()));
                   },
                 )
               ]);

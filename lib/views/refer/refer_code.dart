@@ -16,7 +16,7 @@ class ReferCode extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSizes.radius),
         boxShadow: <BoxShadow>[
-          BoxShadow(color: AppColors.hint.withOpacity(0.2), blurRadius: 10.0),
+          BoxShadow(color: AppColors.hint.withOpacity(0.2), blurRadius: 1.0),
         ],
       ),
       child: Column(

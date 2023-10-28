@@ -30,6 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
           if (state is SignInLoading) {
             appLoader(context);
           } else if (state is SignInSuccess) {
+            Navigator.pop(context);
             Navigator.pushReplacement(context,
                 CupertinoPageRoute(builder: (_) => const HomeScreen()));
           } else if (state is SignInException) {
