@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mk_mining/blocs/balance/balance_bloc.dart';
 import 'package:mk_mining/blocs/refer/refer_bloc.dart';
-import 'package:mk_mining/blocs/sign_in/sign_in_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/database/local_db.dart';
 import 'package:mk_mining/views/auth/sign_in_scr.dart';
 import 'package:mk_mining/views/home/components/balance.dart';
 import 'package:mk_mining/views/refer/refer_code.dart';
@@ -19,25 +20,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String name = '',
-      email = '',
-      referCode = '',
-      mainBalance = '',
-      miningBalance = '';
-  void getData() {
-    name = context.read<SignInBloc>().uName;
-    email = context.read<SignInBloc>().uEmail;
-    referCode = context.read<SignInBloc>().referCode;
-    mainBalance = context.read<SignInBloc>().mainBalance;
-    miningBalance = context.read<SignInBloc>().miningBalance;
-    final token = context.read<SignInBloc>().token;
-    context.read<ReferBloc>().add(FetchReferUserEvent(token: token));
-    setState(() {});
+  String name = '', email = '', referCode = '', token = '', mainBalance = '00', miningBalance = '00';
+  Future<bool> getData() async {
+    try {
+      final loginInfo = await LocalDB.fetchLoginInfo();
+      if (loginInfo == null || loginInfo.isEmpty) {
+        return false;
+      }
+      name = loginInfo[2];
+      email = loginInfo[0];
+      referCode = loginInfo[3];
+      token = loginInfo[4];
+      mainBalance = loginInfo[5];
+      miningBalance = loginInfo[6];
+      setState(() {});
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
   void initState() {
-    getData();
+    getData().then((v) {
+      if (v) {
+        // context.read<BalanceBloc>().add(FetchBalanceEvent(token: token));  it use only time count down
+        context.read<ReferBloc>().add(FetchReferUserEvent(token: token));
+        return;
+      } else {
+        Navigator.pushReplacement(
+            context, CupertinoPageRoute(builder: (_) => const SignInScreen()));
+      }
+    });
     super.initState();
   }
 
@@ -68,11 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         )),
                     PopupMenuItem(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => const SignInScreen()));
+                        onTap: () async {
+                          await LocalDB.deleteLoginInfo().then((value) {
+                            Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (_) => const SignInScreen()));
+                          });
                         },
                         child: const Row(
                           children: [
@@ -94,9 +110,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(AppSizes.bodyPadding),
-              child: Balance(
-                mainBalance: mainBalance,
-                miningBalance: miningBalance,
+              child: BlocBuilder<BalanceBloc, BalanceState>(
+                builder: (context, state) {
+                  if (state is BalanceSuccessState) {
+                    return Balance(
+                    mainBalance: state.mainBalance,
+                    miningBalance: state.miningBalance,
+                  );
+                  } else {
+                    return Balance(
+                    mainBalance: mainBalance,
+                    miningBalance: miningBalance,
+                  );
+                  }
+                  
+                },
               ),
             ),
 

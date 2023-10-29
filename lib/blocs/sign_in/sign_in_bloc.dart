@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mk_mining/database/local_db.dart';
 import 'package:mk_mining/models/sign_in_mod.dart';
 import 'package:mk_mining/services/sign_in_ser.dart';
 
@@ -11,9 +12,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   String uName = '',
       uEmail = '',
       referCode = '',
+      token = '',
       mainBalance = '',
-      miningBalance = '',
-      token = '';
+      miningBalance = '';
   SignInBloc() : super(SignInInitial()) {
     on<DoSignInEvent>((event, emit) async {
       debugPrint("call DoSignInEvent");
@@ -38,9 +39,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         emit(const SignInException(message: "Data is empty"));
         return;
       }
+
+
       //for received balance
       mainBalance = balance.mainBalance ?? '';
       miningBalance = balance.miningBalance ?? '';
+      
 
       //for received token
       token = data.token ?? '';
@@ -60,6 +64,16 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       uName = user.name ?? '';
       uEmail = user.email ?? '';
       referCode = user.referCode ?? '';
+
+      LocalDB.putLoginInfo(
+          email: uEmail,
+          password: event.password,
+          name: uName,
+          referCode: referCode,
+          token: token,
+          mainBalance: mainBalance,
+          miningBalance: miningBalance
+          );
 
       emit(SignInSuccess());
     });
