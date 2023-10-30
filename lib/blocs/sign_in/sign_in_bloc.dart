@@ -65,7 +65,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       uEmail = user.email ?? '';
       referCode = user.referCode ?? '';
 
-      LocalDB.putLoginInfo(
+      await LocalDB.putLoginInfo(
           email: uEmail,
           password: event.password,
           name: uName,

@@ -116,11 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Balance(
                     mainBalance: state.mainBalance,
                     miningBalance: state.miningBalance,
+                    token: token,
                   );
                   } else {
                     return Balance(
                     mainBalance: mainBalance,
                     miningBalance: miningBalance,
+                    token: token,
                   );
                   }
                   

@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mk_mining/blocs/balance/balance_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/database/local_db.dart';
 import 'package:mk_mining/widgets/app_alert_dialog.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 class Balance extends StatefulWidget {
   const Balance(
-      {super.key, required this.mainBalance, required this.miningBalance});
-  final String? mainBalance, miningBalance;
+      {super.key,
+      required this.mainBalance,
+      required this.miningBalance,
+      required this.token});
+  final String mainBalance, miningBalance, token;
 
   @override
   State<Balance> createState() => _BalanceState();
@@ -19,16 +25,50 @@ class _BalanceState extends State<Balance> {
   CountdownController countdownController =
       CountdownController(autoStart: false);
 
-  DateTime? startTime;
-  bool miningButtonStay = true;
   bool mining = false;
-  int sec = 120;
+  int secs = 300;
 
-  // void miningAction() {
-  //   startTime = DateTime.now(); //from local db start date time
-  //   DateTime currentTime = DateTime.now();
-  //   var df = startTime!.difference(currentTime);
-  // }
+  Future<bool> myTime() async {
+    final tt = await LocalDB.fetchStartTime();
+    if (tt == null) {
+      debugPrint("tt: $tt");
+      return true;
+    }
+
+    final isAddBalance = await LocalDB.fetchAddBalanceIs();
+    if (isAddBalance == null) {
+      debugPrint("isAddBalance: $isAddBalance");
+      return true;
+    }
+
+    final dif = tt.difference(DateTime.now()).inSeconds;
+    secs += dif;
+    if (secs <= 0) {
+      mining = false;
+      setState(() {});
+      if (isAddBalance == 0) {
+        return mining;
+      } else {
+        return true;
+      }
+    } else {
+      mining = true;
+      setState(() {});
+      return mining;
+    }
+  }
+
+//
+  @override
+  void initState() {
+    myTime().then((value) {
+      if (!value) {
+        debugPrint('1111111');
+        context.read<BalanceBloc>().add(FetchBalanceEvent(token: widget.token));
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +163,7 @@ class _BalanceState extends State<Balance> {
                                   padding:
                                       const EdgeInsets.only(left: 4, bottom: 3),
                                   child: Text(
-                                    widget.mainBalance ?? '0',
+                                    widget.mainBalance,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -201,7 +241,7 @@ class _BalanceState extends State<Balance> {
                                   padding:
                                       const EdgeInsets.only(left: 4, bottom: 3),
                                   child: Text(
-                                    widget.miningBalance ?? '0',
+                                    widget.miningBalance,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -238,129 +278,150 @@ class _BalanceState extends State<Balance> {
               //balance status
 
               //count down
-              miningButtonStay
-                  ? Expanded(
-                      child: Center(
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  const Text(
-                                    '15:03',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 24,
-                                      letterSpacing: 0.0,
-                                      color: AppColors.nearlySeed,
-                                    ),
+              Expanded(
+                child: Center(
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Countdown(
+                          controller: countdownController,
+                          seconds: secs,
+                          build: (BuildContext context, double time) {
+                            double normalizedValue = time / 86400; //1 day
+                            final duration = Duration(seconds: time.toInt())
+                                .toString()
+                                .substring(0, 5);
+                            return Stack(
+                              children: [
+                                //time count
+                                SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        duration,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 24,
+                                          letterSpacing: 0.0,
+                                          color: AppColors.nearlySeed,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Hrs left',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          letterSpacing: 0.0,
+                                          color:
+                                              AppColors.grey.withOpacity(0.6),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    'Hrs left',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      letterSpacing: 0.0,
-                                      color: AppColors.grey.withOpacity(0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Countdown(
-                                controller: countdownController,
-                                seconds: sec,
-                                build: (BuildContext context, double time) {
-                                  double normalizedValue = time / 120;
-                                  return CircularProgressIndicator(
+                                ),
+
+                                //for indictor
+                                SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: CircularProgressIndicator(
                                     value: normalizedValue,
                                     backgroundColor:
                                         AppColors.nearlySeed.withOpacity(0.3),
-                                  );
-                                },
-                                interval: const Duration(milliseconds: 10),
-                                onFinished: () {
-                                  debugPrint('Timer is done!');
-                                  mining = false;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            mining
-                                ? const SizedBox()
-                                : InkWell(
-                                    onTap: () {
-                                      appAlertDialog(context, "Are you sure?",
-                                          "You want to start mining",
-                                          actions: [
-                                            CupertinoDialogAction(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: AppColors.red),
-                                              ),
-                                            ),
-                                            CupertinoDialogAction(
-                                              child: const Text("Sure"),
-                                              onPressed: () {
-                                                mining = true;
-                                                countdownController.restart();
-                                                setState(() {});
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ]);
-                                    },
-                                    child: Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          gradient:
-                                              const RadialGradient(colors: [
-                                            AppColors.seed,
-                                            AppColors.nearlySeed,
-                                          ])),
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: 28,
-                                            height: 28,
-                                            child: Image.asset(
-                                                "assets/images/mining.png"),
-                                          ),
-                                          const Text(
-                                            "Start",
-                                            style: TextStyle(
-                                                color: AppColors.white,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                          ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                          interval: const Duration(seconds: 60),
+                          onFinished: () async {
+                            debugPrint('Timer is done!');
+                            mining = false;
+                            context
+                                .read<BalanceBloc>()
+                                .add(FetchBalanceEvent(token: widget.token));
+                              
+                            setState(() {});
+                          },
                         ),
                       ),
-                    )
-                  : const SizedBox(),
+                      mining
+                          ? const SizedBox()
+                          : InkWell(
+                              onTap: () {
+                                appAlertDialog(context, "Are you sure?",
+                                    "You want to start mining",
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Cancel",
+                                          style:
+                                              TextStyle(color: AppColors.red),
+                                        ),
+                                      ),
+                                      CupertinoDialogAction(
+                                        child: const Text("Sure"),
+                                        onPressed: () async {
+                                          mining = true;
+                                          countdownController.restart();
+
+                                          setState(() {});
+                                          await LocalDB.putStartTime(
+                                                  startCounterTime:
+                                                      DateTime.now())
+                                              .then((value) {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                      ),
+                                    ]);
+                              },
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    gradient: const RadialGradient(colors: [
+                                      AppColors.seed,
+                                      AppColors.nearlySeed,
+                                    ])),
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 28,
+                                      height: 28,
+                                      child: Image.asset(
+                                          "assets/images/mining.png"),
+                                    ),
+                                    const Text(
+                                      "Start",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                    ],
+                  ),
+                ),
+              ),
               //Count down
             ],
           ),
