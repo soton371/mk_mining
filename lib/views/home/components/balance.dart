@@ -26,7 +26,7 @@ class _BalanceState extends State<Balance> {
       CountdownController(autoStart: false);
 
   bool mining = false;
-  int secs = 86400;
+  int secs = 86399;
 
   Future<bool> myTime() async {
     final tt = await LocalDB.fetchStartTime();
@@ -45,7 +45,7 @@ class _BalanceState extends State<Balance> {
     secs += dif;
     if (secs <= 0) {
       mining = false;
-      secs = 86400;
+      secs = 86399;
       setState(() {});
       if (isAddBalance == 0) {
         return mining;
@@ -290,7 +290,7 @@ class _BalanceState extends State<Balance> {
                           controller: countdownController,
                           seconds: secs,
                           build: (BuildContext context, double time) {
-                            double normalizedValue = time / 86400; //1 day
+                            double normalizedValue = time / 86399; //1 day
                             final duration = Duration(seconds: time.toInt())
                                 .toString()
                                 .split(':');
@@ -332,7 +332,7 @@ class _BalanceState extends State<Balance> {
                                   ),
                                 ),
 
-                                //for indictor
+                                //for indicator
                                 SizedBox(
                                   height: 100,
                                   width: 100,
@@ -348,7 +348,7 @@ class _BalanceState extends State<Balance> {
                           interval: const Duration(seconds: 30),
                           onFinished: () async {
                             debugPrint('Timer is done!');
-                            secs = 86400;
+                            secs = 86399;
                             mining = false;
                             context
                                 .read<BalanceBloc>()
@@ -378,7 +378,7 @@ class _BalanceState extends State<Balance> {
                                       CupertinoDialogAction(
                                         child: const Text("Sure"),
                                         onPressed: () async {
-                                          secs = 86400;
+                                          secs = 86399;
                                           mining = true;
                                           countdownController.restart();
                                           setState(() {});
