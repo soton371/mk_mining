@@ -26,7 +26,7 @@ class _BalanceState extends State<Balance> {
       CountdownController(autoStart: false);
 
   bool mining = false;
-  int secs = 300;
+  int secs = 86400;
 
   Future<bool> myTime() async {
     final tt = await LocalDB.fetchStartTime();
@@ -45,6 +45,7 @@ class _BalanceState extends State<Balance> {
     secs += dif;
     if (secs <= 0) {
       mining = false;
+      secs = 86400;
       setState(() {});
       if (isAddBalance == 0) {
         return mining;
@@ -63,7 +64,6 @@ class _BalanceState extends State<Balance> {
   void initState() {
     myTime().then((value) {
       if (!value) {
-        debugPrint('1111111');
         context.read<BalanceBloc>().add(FetchBalanceEvent(token: widget.token));
       }
     });
@@ -293,7 +293,9 @@ class _BalanceState extends State<Balance> {
                             double normalizedValue = time / 86400; //1 day
                             final duration = Duration(seconds: time.toInt())
                                 .toString()
-                                .substring(0, 5);
+                                .split(':');
+                            final hour = duration[0];
+                            final minute = duration[1];
                             return Stack(
                               children: [
                                 //time count
@@ -306,7 +308,7 @@ class _BalanceState extends State<Balance> {
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
-                                        duration,
+                                        "$hour:$minute",
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.normal,
@@ -343,14 +345,15 @@ class _BalanceState extends State<Balance> {
                               ],
                             );
                           },
-                          interval: const Duration(seconds: 60),
+                          interval: const Duration(seconds: 30),
                           onFinished: () async {
                             debugPrint('Timer is done!');
+                            secs = 86400;
                             mining = false;
                             context
                                 .read<BalanceBloc>()
                                 .add(FetchBalanceEvent(token: widget.token));
-                              
+
                             setState(() {});
                           },
                         ),
@@ -375,9 +378,9 @@ class _BalanceState extends State<Balance> {
                                       CupertinoDialogAction(
                                         child: const Text("Sure"),
                                         onPressed: () async {
+                                          secs = 86400;
                                           mining = true;
                                           countdownController.restart();
-
                                           setState(() {});
                                           await LocalDB.putStartTime(
                                                   startCounterTime:

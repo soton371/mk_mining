@@ -40,6 +40,15 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         return;
       }
 
+
+      //for received balance
+      final mainBalance = balance.mainBalance ?? '';
+      final miningBalance = balance.miningBalance ?? '';
+      
+
+      //for received token
+      final token = data.token ?? '';
+
       final user = data.user;
       if (user == null) {
         emit(RouteLoginState());
@@ -50,6 +59,16 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         emit(RouteLoginState());
         return;
       }
+
+      await LocalDB.putLoginInfo(
+          email: user.email ?? '',
+          password: loginInfo[1],
+          name: user.name ?? '',
+          referCode: user.referCode ?? '',
+          token: token,
+          mainBalance: mainBalance,
+          miningBalance: miningBalance
+          );
 
       emit(RouteHomeState());
     });
