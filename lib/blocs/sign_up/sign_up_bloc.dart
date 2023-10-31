@@ -109,8 +109,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         return;
       }
       optCode = otpData.code.toString();
-      if (event.fromForgotPassword) {
+
+      if (event.fromForgotPassword && !event.resend) {
         emit(SignUpSuccess());
+        return;
+      }
+
+      if (event.fromForgotPassword && event.resend) {
+        emit(ResendOTPState());
       }
     });
 

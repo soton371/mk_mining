@@ -12,6 +12,7 @@ final class SignUpInitial extends SignUpState {}
 final class SignUpLoading extends SignUpState {}
 
 final class SignUpSuccess extends SignUpState {}
+final class ResendOTPState extends SignUpState {}
 
 final class SignUpException extends SignUpState {
   final String msg;

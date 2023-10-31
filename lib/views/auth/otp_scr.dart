@@ -28,7 +28,7 @@ class _OTPScreenState extends State<OTPScreen> {
     debugPrint("widget.fromForgotPassword: ${widget.fromForgotPassword}");
     if (!widget.fromForgotPassword) {
       context.read<SignUpBloc>().add(SendOtpEvent(
-          email: widget.email, fromForgotPassword: widget.fromForgotPassword));
+          email: widget.email, fromForgotPassword: widget.fromForgotPassword, resend: false));
     }
 
     super.initState();
@@ -41,7 +41,10 @@ class _OTPScreenState extends State<OTPScreen> {
         listener: (context, state) {
           if (state is SignUpLoading) {
             appLoader(context);
-          } else if (state is SignUpSuccess) {
+          } else if(state is ResendOTPState){
+            Navigator.pop(context);
+          }
+          else if (state is SignUpSuccess) {
             Navigator.pop(context);
             if (widget.fromForgotPassword) {
               Navigator.pushReplacement(
@@ -160,7 +163,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     //new event for resend
                     context.read<SignUpBloc>().add(SendOtpEvent(
                         email: widget.email,
-                        fromForgotPassword: widget.fromForgotPassword));
+                        fromForgotPassword: widget.fromForgotPassword,
+                        resend: true));
                   }),
             ],
           ),

@@ -23,10 +23,10 @@ class DoSignUpEvent extends SignUpEvent {
 
 class SendOtpEvent extends SignUpEvent {
   final String email;
-  final bool fromForgotPassword;
-  const SendOtpEvent({required this.email, required this.fromForgotPassword});
+  final bool fromForgotPassword, resend;
+  const SendOtpEvent({required this.email, required this.fromForgotPassword, required this.resend});
   @override
-  List<Object> get props => [email, fromForgotPassword];
+  List<Object> get props => [email, fromForgotPassword, resend];
 }
 
 class SubmitOtpEvent extends SignUpEvent {
