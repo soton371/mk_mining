@@ -71,12 +71,15 @@ class _OTPScreenState extends State<OTPScreen> {
                   ]);
             }
           } else if (state is SignUpException) {
+            Navigator.pop(context);
             appAlertDialog(context, "Warning", state.msg, actions: [
               CupertinoDialogAction(
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  if (!widget.fromForgotPassword) {
+                    Navigator.pop(context);
+                  }
                 },
               )
             ]);
