@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mk_mining/blocs/sign_in/sign_in_bloc.dart';
 import 'package:mk_mining/configs/colors.dart';
 import 'package:mk_mining/configs/sizes.dart';
+import 'package:mk_mining/utilities/google_tools.dart';
 import 'package:mk_mining/views/auth/forgot_password_scr.dart';
 import 'package:mk_mining/views/auth/sign_up_scr.dart';
 import 'package:mk_mining/views/home/home.dart';
@@ -156,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                         AppSizes.radius))),
-                            onPressed: () {},
+                            onPressed: handleSignIn,
                             icon: Image.asset(
                               "assets/images/search.png",
                               height: 16,
@@ -168,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   //for button
                    SizedBox(
-                    height: AppSizes.height(context) * 0.08,
+                    height: AppSizes.height(context) * 0.07,
                   ),
 
                   SizedBox(
