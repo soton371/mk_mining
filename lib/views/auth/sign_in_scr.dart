@@ -143,12 +143,15 @@ class _SignInScreenState extends State<SignInScreen> {
                             onPressed: () {
                               context.read<SignInBloc>().add(DoSignInEvent(
                                   email: emailCon.text,
-                                  password: passwordCon.text));
+                                  password: passwordCon.text,
+                                  name: '',
+                                  socialId: '',
+                                  imgUrl: ''));
                             },
                             child: const Text("Login my account")),
                       ),
                       const SizedBox(
-                        height: AppSizes.bodyPadding*2,
+                        height: AppSizes.bodyPadding * 2,
                       ),
                       SizedBox(
                         width: AppSizes.width(context),
@@ -157,7 +160,29 @@ class _SignInScreenState extends State<SignInScreen> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                         AppSizes.radius))),
-                            onPressed: handleSignIn,
+                            onPressed: () {
+                              handleSignIn().then((value) {
+                                if (value == null) {
+                                  appAlertDialog(context, "Warning",
+                                      "Something went wrong",
+                                      actions: [
+                                        CupertinoDialogAction(
+                                          child: const Text("OK"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      ]);
+                                  return;
+                                }
+                                context.read<SignInBloc>().add(DoSignInEvent(
+                                  email: value[0]??'',
+                                  password: '',
+                                  name: value[1]??'',
+                                  socialId: value[2]??'',
+                                  imgUrl: value[3]??''));
+                              });
+                            },
                             icon: Image.asset(
                               "assets/images/search.png",
                               height: 16,
@@ -168,7 +193,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   //for button
-                   SizedBox(
+                  SizedBox(
                     height: AppSizes.height(context) * 0.07,
                   ),
 

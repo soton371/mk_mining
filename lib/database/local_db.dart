@@ -18,10 +18,21 @@ class LocalDB {
     required String token,
     required String mainBalance,
     required String miningBalance,
+    required String socialId,
+    required String imgUrl,
   }) async {
     final box = await Hive.openBox(loginBox);
-    box.put(loginIfo,
-        [email, password, name, referCode, token, mainBalance, miningBalance]);
+    box.put(loginIfo, [
+      email, //0
+      password, //1
+      name, //2
+      referCode, //3
+      token, //4
+      mainBalance, //5
+      miningBalance, //6
+      socialId, //7
+      imgUrl //8
+    ]);
   }
 
   static Future<List<String>?> fetchLoginInfo() async {

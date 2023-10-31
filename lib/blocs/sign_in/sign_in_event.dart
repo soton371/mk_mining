@@ -8,8 +8,14 @@ sealed class SignInEvent extends Equatable {
 }
 
 class DoSignInEvent extends SignInEvent {
-  final String email, password;
-  const DoSignInEvent({required this.email, required this.password});
+  final String email, password, name, socialId, imgUrl;
+  const DoSignInEvent(
+      {required this.email,
+      required this.password,
+      required this.name,
+      required this.socialId,
+      required this.imgUrl});
   @override
-  List<Object> get props => [email,password];
+  List<Object> get props => [email, password, name, socialId, imgUrl];
 }
+

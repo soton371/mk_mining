@@ -8,12 +8,15 @@ GoogleSignIn googleSignIn = GoogleSignIn(
   ],
 );
 
-
-Future<void> handleSignIn() async {
-    try {
-      final s = await googleSignIn.signIn();
-      debugPrint("soton name: ${s?.displayName} \nsoton email: ${s?.email}");
-    } catch (error) {
-      debugPrint("error in handleSignIn: $error");
+Future<List<String?>?> handleSignIn() async {
+  try {
+    final s = await googleSignIn.signIn();
+    if (s == null) {
+      return null;
     }
+    return [s.email, s.displayName, s.id, s.photoUrl];
+  } catch (error) {
+    debugPrint("error in handleSignIn: $error");
+    return null;
   }
+}

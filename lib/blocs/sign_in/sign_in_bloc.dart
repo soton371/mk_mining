@@ -20,12 +20,17 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       debugPrint("call DoSignInEvent");
       emit(SignInLoading());
 
-      Map<String, String> payload = {
-        "email": event.email,
-        "password": event.password
-      };
+      Map<String, String> payload = event.socialId.isEmpty
+          ? {"email": event.email, "password": event.password}
+          : {
+              "email": event.email,
+              "name": event.name,
+              "social_id": event.socialId
+            };
 
-      final SignInModel result = await signInService(payload: payload);
+      debugPrint("DoSignInEvent payload: $payload");
+      final SignInModel result =
+          await signInService(payload: payload, isGoogleSignIn:event.socialId.isEmpty? false:true);
 
       if (result.status == 0) {
         emit(
@@ -40,11 +45,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         return;
       }
 
-
       //for received balance
       mainBalance = balance.mainBalance ?? '';
       miningBalance = balance.miningBalance ?? '';
-      
 
       //for received token
       token = data.token ?? '';
@@ -72,8 +75,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           referCode: referCode,
           token: token,
           mainBalance: mainBalance,
-          miningBalance: miningBalance
-          );
+          miningBalance: miningBalance,
+          socialId: event.socialId,
+          imgUrl: event.imgUrl);
 
       emit(SignInSuccess());
     });

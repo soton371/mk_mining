@@ -21,12 +21,17 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
       }
 
       //for login
-      Map<String, String> payload = {
+      Map<String, String> payload = loginInfo[7].isEmpty ?
+       {
         "email": loginInfo[0],
         "password": loginInfo[1]
-      };
-
-      final SignInModel result = await signInService(payload: payload);
+      }:{
+              "email": loginInfo[0],
+              "name": loginInfo[2],
+              "social_id": loginInfo[7]
+            };
+debugPrint("DoRouteEvent payload: $payload");
+      final SignInModel result = await signInService(payload: payload, isGoogleSignIn:loginInfo[7].isEmpty ? false:true);
 
       if (result.status == 0) {
         emit(RouteLoginState());
@@ -67,7 +72,9 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
           referCode: user.referCode ?? '',
           token: token,
           mainBalance: mainBalance,
-          miningBalance: miningBalance
+          miningBalance: miningBalance,
+          socialId: loginInfo[7],
+          imgUrl: loginInfo[8]
           );
 
       emit(RouteHomeState());

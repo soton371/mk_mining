@@ -6,9 +6,9 @@ import 'package:mk_mining/configs/urls.dart';
 import 'package:mk_mining/models/sign_in_mod.dart';
 
 Future<SignInModel> signInService(
-    {required Map<String, String> payload}) async {
+    {required Map<String, String> payload, required bool isGoogleSignIn}) async {
   debugPrint("call signInService");
-  final Uri url = Uri.parse(AppUrls.signIn);
+  final Uri url = Uri.parse(isGoogleSignIn ? AppUrls.googleSignIn :AppUrls.signIn);
   final SignInModel signInModel = SignInModel();
   try {
     final response = await http.post(url, body: payload);
