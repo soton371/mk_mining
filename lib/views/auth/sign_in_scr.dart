@@ -147,7 +147,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: const Text("Login my account")),
                       ),
                       const SizedBox(
-                        height: AppSizes.bodyPadding,
+                        height: AppSizes.bodyPadding*2,
                       ),
                       SizedBox(
                         width: AppSizes.width(context),
@@ -167,8 +167,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   //for button
-                  const SizedBox(
-                    height: AppSizes.bodyPadding,
+                   SizedBox(
+                    height: AppSizes.height(context) * 0.08,
                   ),
 
                   SizedBox(

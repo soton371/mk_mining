@@ -345,7 +345,7 @@ class _BalanceState extends State<Balance> {
                               ],
                             );
                           },
-                          interval: const Duration(seconds: 30),
+                          interval: const Duration(seconds: 1),
                           onFinished: () async {
                             debugPrint('Timer is done!');
                             secs = 86399;
@@ -362,6 +362,26 @@ class _BalanceState extends State<Balance> {
                           ? const SizedBox()
                           : InkWell(
                               onTap: () {
+                                final requiredBalance = int.parse(widget.mainBalance);
+                                if(requiredBalance < 1000){
+                                  appAlertDialog(
+                                      context,
+                                      "Insufficient Main Balance",
+                                      "You can't start mining until your main balance is 1000 coins",
+                                      actions: [
+                                    CupertinoDialogAction(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        "OK",
+                                        style: TextStyle(color: AppColors.red),
+                                      ),
+                                    )
+                                  ]);
+                                  return;
+                                }
+
                                 appAlertDialog(context, "Are you sure?",
                                     "You want to start mining",
                                     actions: [

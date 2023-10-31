@@ -1,4 +1,4 @@
-package com.example.mk_mining
+package com.mkminingus.mk_mining
 
 import io.flutter.embedding.android.FlutterActivity
 
